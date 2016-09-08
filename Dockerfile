@@ -2,7 +2,7 @@ FROM jupyter/minimal-notebook
 
 USER root
 
-# Oracle JDK instead of OpenJDK
+# Oracle JDK
 # Uses Ubuntu Xenial Repository for Debian as per instructions at
 # http://www.webupd8.org/2014/03/how-to-install-oracle-java-8-in-debian.html
 RUN apt-get remove -y --auto-remove openjdk* && \
@@ -19,7 +19,7 @@ RUN apt-get remove -y --auto-remove openjdk* && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Spark dependencies
+# Spark
 RUN cd /tmp && \
     APACHE_SPARK_VERSION=2.0.0 && \
     HADOOP_VERSION=2.7 && \
@@ -29,7 +29,7 @@ RUN cd /tmp && \
     rm spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz && \
     cd /usr/local && ln -s spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
 
-# Mesos dependencies
+# Mesos
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF && \
     DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]') && \
     CODENAME=$(lsb_release -cs) && \
@@ -38,6 +38,25 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF && \
     apt-get --no-install-recommends -y --force-yes install mesos=1.0.1-2.0.93.debian81 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Elaticsearch Hadoop
+RUN apt-get install -y unzip && \
+    ELASTICSEARCH_HADOOP_VERSION=2.4.0 && \
+    wget http://download.elastic.co/hadoop/elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}.zip && \
+    unzip elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}.zip && \
+    cp elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}/dist/elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}.jar /usr/local/spark/jars/ && \
+    cp elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}/dist/elasticsearch-spark_2.11-${ELASTICSEARCH_HADOOP_VERSION}.jar /usr/local/spark/jars/ && \
+    rm -rf elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION} && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Hadoop AWS
+RUN HADOOP_AWS_VERSION=2.7.2 && \
+    AWS_JAVA_SDK_VERSION=1.7.4 && \
+    wget http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOOP_AWS_VERSION}/hadoop-aws-${HADOOP_AWS_VERSION}.jar && \
+    mv hadoop-aws-${HADOOP_AWS_VERSION}.jar /usr/local/spark/jars/ && \
+    wget http://central.maven.org/maven2/com/amazonaws/aws-java-sdk/${AWS_JAVA_SDK_VERSION}/aws-java-sdk-${AWS_JAVA_SDK_VERSION}.jar && \
+    mv aws-java-sdk-${AWS_JAVA_SDK_VERSION}.jar /usr/local/spark/jars/
 
 # Spark and Mesos config
 ENV SPARK_HOME /usr/local/spark
