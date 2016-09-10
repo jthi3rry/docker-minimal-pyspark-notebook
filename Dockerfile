@@ -44,7 +44,6 @@ RUN apt-get install -y unzip && \
     ELASTICSEARCH_HADOOP_VERSION=2.4.0 && \
     wget http://download.elastic.co/hadoop/elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}.zip && \
     unzip elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}.zip && \
-    cp elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}/dist/elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}.jar /usr/local/spark/jars/ && \
     cp elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}/dist/elasticsearch-spark_2.11-${ELASTICSEARCH_HADOOP_VERSION}.jar /usr/local/spark/jars/ && \
     rm -rf elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION} && \
     apt-get clean && \
