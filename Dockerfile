@@ -46,6 +46,7 @@ RUN apt-get install -y unzip && \
     unzip elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}.zip && \
     cp elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}/dist/elasticsearch-spark_2.11-${ELASTICSEARCH_HADOOP_VERSION}.jar /usr/local/spark/jars/ && \
     rm -rf elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION} && \
+    rm -rf elasticsearch-hadoop-${ELASTICSEARCH_HADOOP_VERSION}.zip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -60,7 +61,7 @@ RUN HADOOP_AWS_VERSION=2.7.2 && \
 # Spark and Mesos config
 ENV SPARK_HOME /usr/local/spark
 ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.1-src.zip
-ENV MESOS_NATIVE_LIBRARY /usr/local/lib/libmesos.so
+ENV MESOS_NATIVE_JAVA_LIBRARY /usr/local/lib/libmesos.so
 ENV SPARK_OPTS --driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info
 
 USER $NB_USER
